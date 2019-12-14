@@ -31,7 +31,12 @@ def calculate_year_progress():
 
 
 def prepare_message(percent):
-    return 'Прогресс года: {}%!'.format(percent)
+    one = '⬛'
+    zero = '⬜'
+
+    twenty = int(percent / 100 * 20)
+
+    return '{}{} {}%!'.format(one * twenty, zero * (20 - twenty), percent)
 
 
 def is_leap_year(year):

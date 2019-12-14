@@ -38,7 +38,19 @@ def test_not_leap_year():
     assert is_leap_year(2019) is False
 
 
-def test_message_creation():
+def test_message_creation_50_percent():
     message = prepare_message(50)
 
-    assert message == 'Прогресс года: 50%!'
+    assert message == '⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜ 50%!'
+
+
+def test_message_creation_100_percent():
+    message = prepare_message(100)
+
+    assert message == '⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛ 100%!'
+
+
+def test_message_creation_0_percent():
+    message = prepare_message(0)
+
+    assert message == '⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜ 0%!'
