@@ -14,7 +14,7 @@ VK_PASS = os.environ.get('VK_PASS')
 GROUP_ID = '-189841908'
 
 
-def calculate_year_progress():
+def calculate_year_progress() -> int:
     today = dt.today()
 
     if is_leap_year(today.year):
@@ -27,10 +27,10 @@ def calculate_year_progress():
 
     percent = int(today_day_number / days_count_in_year * 100)
 
-    return str(percent)
+    return percent
 
 
-def prepare_message(percent):
+def prepare_message(percent: int) -> str:
     one = '⬛'
     zero = '⬜'
 
@@ -39,7 +39,7 @@ def prepare_message(percent):
     return '{}{} {}%!'.format(one * twenty, zero * (20 - twenty), percent)
 
 
-def is_leap_year(year):
+def is_leap_year(year: int) -> bool:
     if year % 4 == 0:
         return True
     else:
