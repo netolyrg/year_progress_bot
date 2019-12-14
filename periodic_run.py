@@ -7,12 +7,12 @@ Periodic runner
 from apscheduler.schedulers.blocking import BlockingScheduler
 from core import post_message
 
-sched = BlockingScheduler()
+scheduler = BlockingScheduler()
 
 
-@sched.scheduled_job('interval', minutes=3)
+@scheduler.scheduled_job('cron', hour=8)
 def timed_job():
     post_message()
 
 
-sched.start()
+scheduler.start()
