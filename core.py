@@ -12,6 +12,7 @@ import os
 VK_LOGIN = os.environ.get('VK_LOGIN')
 VK_PASS = os.environ.get('VK_PASS')
 GROUP_ID = 189841908
+GROUP_NAME_ORIG = 'Year Progress'
 
 
 def calculate_year_progress() -> int:
@@ -46,6 +47,10 @@ def is_leap_year(year: int) -> bool:
         return False
 
 
+def get_new_name(old_name, year_percent):
+    return '{} | {}%'.format(old_name, year_percent)
+
+
 def post_message():
     assert VK_LOGIN
     assert VK_PASS
@@ -55,7 +60,10 @@ def post_message():
 
     vk = vk_session.get_api()
 
-    message = prepare_message(calculate_year_progress())
+    year_percent = calculate_year_progress()
+    message = prepare_message(year_percent)
+
+    new_name = get_new_name(GROUP_NAME_ORIG, year_percent)
 
     # TODO add retry
     post_response = vk.wall.post(owner_id=f'-{GROUP_ID}', message=message)
@@ -64,6 +72,10 @@ def post_message():
     # TODO add retry
     status_response = vk.status.set(group_id=GROUP_ID, text=message)
     print(status_response)
+
+    # TODO add retry
+    rename_response = vk.groups.edit(group_id=GROUP_ID, title=new_name)
+    print(rename_response)
 
 
 if __name__ == '__main__':

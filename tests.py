@@ -6,7 +6,7 @@ Test for core
 
 from freezegun import freeze_time
 
-from core import calculate_year_progress, is_leap_year, prepare_message
+from core import calculate_year_progress, is_leap_year, prepare_message, get_new_name
 
 
 @freeze_time('2019-07-02')
@@ -54,3 +54,11 @@ def test_message_creation_0_percent():
     message = prepare_message(0)
 
     assert message == '⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜ 0%!'
+
+
+def test_new_name_creation():
+    name = get_new_name('test', 50)
+
+    expected = 'test | 50%'
+
+    assert name == expected
