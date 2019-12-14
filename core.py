@@ -11,7 +11,7 @@ import os
 
 VK_LOGIN = os.environ.get('VK_LOGIN')
 VK_PASS = os.environ.get('VK_PASS')
-GROUP_ID = '-189841908'
+GROUP_ID = 189841908
 
 
 def calculate_year_progress() -> int:
@@ -57,7 +57,13 @@ def post_message():
 
     message = prepare_message(calculate_year_progress())
 
-    print(vk.wall.post(owner_id=GROUP_ID, message=message))
+    # TODO add retry
+    post_response = vk.wall.post(owner_id=f'-{GROUP_ID}', message=message)
+    print(post_response)
+
+    # TODO add retry
+    status_response = vk.status.set(group_id=GROUP_ID, text=message)
+    print(status_response)
 
 
 if __name__ == '__main__':
