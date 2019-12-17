@@ -4,7 +4,7 @@ Python just for fun
 
 """
 
-from datetime import datetime as dt
+from datetime import datetime as dt, timedelta
 
 import vk_api
 import os
@@ -15,16 +15,16 @@ GROUP_ID = 189841908
 GROUP_NAME_ORIG = 'Year Progress'
 
 
-def calculate_year_progress() -> int:
-    today = dt.today()
+def calculate_year_progress(day: dt = None) -> int:
+    day = day or dt.today()
 
-    if is_leap_year(today.year):
+    if is_leap_year(day.year):
         days_count_in_year = 366
     else:
         days_count_in_year = 365
 
-    new_year_day = dt(today.year, month=1, day=1)
-    today_day_number = (today - new_year_day).days + 1
+    new_year_day = dt(day.year, month=1, day=1)
+    today_day_number = (day - new_year_day).days + 1
 
     percent = int(today_day_number / days_count_in_year * 100)
 
@@ -67,7 +67,7 @@ def get_status(percent: int) -> str:
     return text
 
 
-def post_message():
+def post_message() -> None:
     assert VK_LOGIN
     assert VK_PASS
 
@@ -96,5 +96,22 @@ def post_message():
     print(rename_response)
 
 
+def is_right_day(day: dt = None) -> bool:
+    """
+    Return True if percent of previous day is not equal to percent of day
+    :param day:
+    :return: True or False
+    """
+
+    day = day or dt.today()
+    day_before = day - timedelta(days=1)
+
+    orig_day_percent = calculate_year_progress(day)
+    day_before_percent = calculate_year_progress(day_before)
+
+    return orig_day_percent != day_before_percent
+
+
 if __name__ == '__main__':
-    post_message()
+    if is_right_day():
+        post_message()
