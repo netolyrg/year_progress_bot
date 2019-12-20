@@ -113,5 +113,4 @@ def is_right_day(day: dt = None) -> bool:
 
 
 if __name__ == '__main__':
-    if is_right_day():
-        post_message()
+    post_message()
