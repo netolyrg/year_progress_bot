@@ -35,7 +35,7 @@ def prepare_message(percent: int) -> str:
     one = '⬛'
     zero = '⬜'
 
-    bar_length = 18
+    bar_length = 14
     bar_percent = int(percent / 100 * bar_length)
 
     return '{}{} {}%!'.format(one * bar_percent, zero * (bar_length - bar_percent), percent)
