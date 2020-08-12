@@ -18,24 +18,39 @@ GROUP_NAME_ORIG = 'Year Progress'
 def calculate_year_progress(day: dt = None) -> int:
     day = day or dt.today()
 
-    if is_leap_year(day.year):
-        days_count_in_year = 366
-    else:
-        days_count_in_year = 365
-
-    new_year_day = dt(day.year, month=1, day=1)
-    today_day_number = (day - new_year_day).days + 1
+    today_day_number = get_day_number(day)
+    days_count_in_year = return_days_count_in_year(day)
 
     percent = int(today_day_number / days_count_in_year * 100)
 
     return percent
 
 
-def prepare_message(percent: int) -> str:
+def get_day_number(day: dt = None) -> int:
+    day = day or dt.today()
+
+    new_year_day = dt(day.year, month=1, day=1)
+    today_day_number = (day - new_year_day).days + 1
+
+    return today_day_number
+
+
+def return_days_count_in_year(day: dt = None) -> int:
+    day = day or dt.today()
+
+    if is_leap_year(day.year):
+        days_count_in_year = 366
+    else:
+        days_count_in_year = 365
+
+    return days_count_in_year
+
+
+def prepare_message_percent(percent: int) -> str:
     one = '⬛'
     zero = '⬜'
 
-    bar_length = 14
+    bar_length = 10
     bar_percent = int(percent / 100 * bar_length)
 
     return '{}{} {}%!'.format(one * bar_percent, zero * (bar_length - bar_percent), percent)
@@ -67,7 +82,7 @@ def get_status(percent: int) -> str:
     return text
 
 
-def post_message() -> None:
+def post_percent() -> None:
     assert VK_LOGIN
     assert VK_PASS
 
@@ -77,7 +92,7 @@ def post_message() -> None:
     vk = vk_session.get_api()
 
     year_percent = calculate_year_progress()
-    message = prepare_message(year_percent)
+    message = prepare_message_percent(year_percent)
 
     status = get_status(year_percent)
 
@@ -96,7 +111,30 @@ def post_message() -> None:
     print(rename_response)
 
 
-def is_right_day(day: dt = None) -> bool:
+def prepare_message_number(day: int) -> str:
+    template = f'Сегодня {day}-й день года.'
+
+    return template
+
+
+def post_day_count() -> None:
+    assert VK_LOGIN
+    assert VK_PASS
+
+    vk_session = vk_api.VkApi(VK_LOGIN, VK_PASS)
+    vk_session.auth()
+
+    vk = vk_session.get_api()
+
+    day_number = get_day_number()
+    message = prepare_message_number(day_number)
+
+    # TODO add retry
+    post_response = vk.wall.post(owner_id=f'-{GROUP_ID}', message=message)
+    print(post_response)
+
+
+def is_right_day_to_post_percent(day: dt = None) -> bool:
     """
     Return True if percent of previous day is not equal to percent of day
     :param day:
@@ -110,7 +148,3 @@ def is_right_day(day: dt = None) -> bool:
     day_before_percent = calculate_year_progress(day_before)
 
     return orig_day_percent != day_before_percent
-
-
-if __name__ == '__main__':
-    post_message()
