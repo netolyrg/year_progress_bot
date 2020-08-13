@@ -5,7 +5,7 @@ Periodic runner
 """
 
 from apscheduler.schedulers.blocking import BlockingScheduler
-from core import post_percent, is_right_day_to_post_percent
+from core import post_percent, is_right_day_to_post_percent, post_day_count
 
 scheduler = BlockingScheduler()
 
