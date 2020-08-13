@@ -148,3 +148,10 @@ def is_right_day_to_post_percent(day: dt = None) -> bool:
     day_before_percent = calculate_year_progress(day_before)
 
     return orig_day_percent != day_before_percent
+
+
+if __name__ == '__main__':
+    if is_right_day_to_post_percent():
+        post_percent()
+    else:
+        post_day_count()
