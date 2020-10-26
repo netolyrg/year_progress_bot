@@ -4,10 +4,10 @@ Python just for fun
 
 """
 
+import os
 from datetime import datetime as dt, timedelta
 
 import vk_api
-import os
 from PIL import Image, ImageDraw, ImageFont
 
 VK_LOGIN = os.environ.get('VK_LOGIN')
