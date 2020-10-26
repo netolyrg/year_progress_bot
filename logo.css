@@ -1,0 +1,45 @@
+/* year progress */
+
+title {
+    position: absolute;
+    width: 254px;
+    height: 49px;
+    left: calc(50% - 254px / 2 - 1px);
+    top: calc(50% - 49px / 2 + 139.5px);
+
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 42px;
+    line-height: 49px;
+    display: flex;
+    align-items: center;
+    text-align: center;
+
+    color: #B1B1B1;
+}
+
+percent {
+    /* 81% */
+
+
+    position: absolute;
+    width: 468px;
+    height: 293px;
+    left: calc(50% - 468px / 2);
+    top: calc(50% - 293px / 2 - 12.5px);
+
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 250px;
+    line-height: 293px;
+    /* identical to box height */
+
+    display: flex;
+    align-items: center;
+    text-align: center;
+
+    color: #000000;
+
+}
