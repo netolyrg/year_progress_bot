@@ -14,6 +14,8 @@ scheduler = BlockingScheduler()
 def timed_job():
     if is_right_day_to_post_percent():
         post_percent()
+        logo_file_name = create_yp_logo()
+        load_new_group_cover(logo_file_name)
     else:
         post_day_count()
 
