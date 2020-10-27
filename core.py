@@ -4,10 +4,11 @@ Python just for fun
 
 """
 
+import os
 from datetime import datetime as dt, timedelta
 
 import vk_api
-import os
+from PIL import Image, ImageDraw, ImageFont
 
 VK_LOGIN = os.environ.get('VK_LOGIN')
 VK_PASS = os.environ.get('VK_PASS')
@@ -150,8 +151,65 @@ def is_right_day_to_post_percent(day: dt = None) -> bool:
     return orig_day_percent != day_before_percent
 
 
+# todo need tests
+def create_yp_logo() -> str:
+    file_name = 'yp_cover.png'
+    title_size = 42
+    percent_size = 250
+    image_size = (700, 700)
+
+    percent = calculate_year_progress()
+    text_percent = f'{percent}%'
+    text_title = 'Year Progress'
+
+    img = Image.new(mode='RGB', color=(255, 255, 255), size=image_size)
+    draw = ImageDraw.Draw(img)
+    font_percent = ImageFont.truetype('fonts/Roboto-Medium.ttf', size=percent_size)
+    font_title = ImageFont.truetype('fonts/Roboto-Regular.ttf', size=title_size)
+
+    width, height = image_size
+
+    # percent
+    percent_width, percent_height = font_percent.getsize(text_percent)
+    x, y = (width - percent_width) // 2, (height - percent_height - 25) // 2
+    draw.text((x, y), text_percent, fill=(0, 0, 0), font=font_percent)
+
+    # title
+    title_width, title_height = font_title.getsize(text_title)
+    x, y = (width - title_width - 2) // 2, (height - title_height + 279) // 2
+    draw.text((x, y), text_title, fill=(177, 177, 177), font=font_title)
+
+    img.save(file_name)
+
+    return file_name
+
+
+def load_new_group_cover(cover_file: str) -> None:
+    assert VK_LOGIN
+    assert VK_PASS
+
+    vk_session = vk_api.VkApi(VK_LOGIN, VK_PASS)
+    vk_session.auth(token_only=True)
+
+    upload = vk_api.VkUpload(vk_session)
+    photo = upload.photo_profile(
+        cover_file,
+        owner_id=-GROUP_ID,
+    )
+
+    photo_post_id = photo.get('post_id')
+
+    vk = vk_session.get_api()
+    vk.wall.delete(
+        owner_id=-GROUP_ID,
+        post_id=photo_post_id
+    )
+
+
 if __name__ == '__main__':
     if is_right_day_to_post_percent():
         post_percent()
+        logo_file_name = create_yp_logo()
+        load_new_group_cover(logo_file_name)
     else:
         post_day_count()

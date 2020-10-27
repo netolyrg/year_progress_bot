@@ -1,2 +1,8 @@
 .idea/
+.pytest_cache/
+__pycache__/
+
 *.log
+*.png
+
+vk_config.v2.json
