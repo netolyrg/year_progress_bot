@@ -170,12 +170,12 @@ def create_yp_logo() -> str:
     width, height = image_size
 
     # percent
-    percent_width, percent_height = font_percent.getsize(text_percent)
+    percent_width, percent_height = 468, 293
     x, y = (width - percent_width) // 2, (height - percent_height - 25) // 2
     draw.text((x, y), text_percent, fill=(0, 0, 0), font=font_percent)
 
     # title
-    title_width, title_height = font_title.getsize(text_title)
+    title_width, title_height = 254, 49
     x, y = (width - title_width - 2) // 2, (height - title_height + 279) // 2
     draw.text((x, y), text_title, fill=(177, 177, 177), font=font_title)
 
