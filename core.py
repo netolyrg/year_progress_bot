@@ -15,6 +15,8 @@ VK_PASS = os.environ.get('VK_PASS')
 GROUP_ID = 189841908
 GROUP_NAME_ORIG = 'Year Progress'
 
+NEW_YEAR_FEATURE_ENABLED = bool(os.environ.get('NEW_YEAR_FEATURE_ENABLED', False))
+
 
 def calculate_year_progress(day: dt = None) -> int:
     day = day or dt.today()
@@ -206,6 +208,50 @@ def load_new_group_cover(cover_file: str) -> None:
     )
 
 
+def get_days_before_new_year() -> int:
+    year = dt.now().year
+    # 31 of december from 365 days == 1 day before New Year
+    # 31 of december from 366 days == 1 day before New Year
+    return 366 - get_day_number() + int(is_leap_year(year))
+
+
+def generate_ny_countdown_text(orig_days: int) -> str:
+    day_map = {
+        (1, ): 'день',
+        (2, 3, 4): 'дня',
+        (i for i in range(5, 21)): 'дней'
+    }
+
+    if orig_days > 20:
+        days = orig_days % 10
+    else:
+        days = orig_days
+
+    word = 'дней'
+    for rng, value in day_map.items():
+        if days in rng:
+            word = value
+            break
+
+    return f'Всего {orig_days} {word} до Нового года :)'
+
+
+def post_new_year_countdown():
+    assert VK_LOGIN
+    assert VK_PASS
+
+    vk_session = vk_api.VkApi(VK_LOGIN, VK_PASS)
+    vk_session.auth()
+
+    vk = vk_session.get_api()
+
+    days_before_new_year = get_days_before_new_year()
+    post_text = generate_ny_countdown_text(days_before_new_year)
+
+    post_response = vk.wall.post(owner_id=f'-{GROUP_ID}', message=post_text)
+    print(post_response)
+
+
 if __name__ == '__main__':
     if is_right_day_to_post_percent():
         post_percent()
@@ -213,3 +259,6 @@ if __name__ == '__main__':
         load_new_group_cover(logo_file_name)
     else:
         post_day_count()
+
+    if NEW_YEAR_FEATURE_ENABLED:
+        post_new_year_countdown()
