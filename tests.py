@@ -12,7 +12,9 @@ from core import (
     prepare_message_percent,
     get_new_name,
     is_right_day_to_post_percent,
-    get_day_number
+    get_day_number,
+    get_days_before_new_year,
+    generate_ny_countdown_text
 )
 
 
@@ -94,3 +96,52 @@ def test_day_count_1():
 @freeze_time('2020-12-31')
 def test_day_count_366():
     assert get_day_number() == 366
+
+
+@freeze_time('2020-12-31')
+def test_day_before_new_year():
+    expected = 1
+    actual = get_days_before_new_year()
+    assert actual == expected
+
+
+@freeze_time('2021-01-01')
+def test_ny_1_january():
+    expected = 365
+    actual = get_days_before_new_year()
+    assert actual == expected
+
+
+def test_ny_text_1_day():
+    expected = 'Всего 1 день до Нового года :)'
+    actual = generate_ny_countdown_text(1)
+
+    assert actual == expected
+
+
+def test_ny_text_plural_3():
+    expected = 'Всего 3 дня до Нового года :)'
+    actual = generate_ny_countdown_text(3)
+
+    assert actual == expected
+
+
+def test_ny_text_plural_5():
+    expected = 'Всего 5 дней до Нового года :)'
+    actual = generate_ny_countdown_text(5)
+
+    assert actual == expected
+
+
+def test_ny_text_plural_21():
+    expected = 'Всего 21 день до Нового года :)'
+    actual = generate_ny_countdown_text(21)
+
+    assert actual == expected
+
+
+def test_ny_text_plural_15():
+    expected = 'Всего 15 дней до Нового года :)'
+    actual = generate_ny_countdown_text(15)
+
+    assert actual == expected
