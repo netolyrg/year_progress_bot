@@ -251,6 +251,11 @@ def post_new_year_countdown():
     post_response = vk.wall.post(owner_id=f'-{GROUP_ID}', message=post_text)
     print(post_response)
 
+    post_id = post_response.get('post_id')
+    if post_id:
+        pin_response = vk.wall.pin(owner_id=f'-{GROUP_ID}', post_id=post_id)
+        print(pin_response)
+
 
 if __name__ == '__main__':
     if is_right_day_to_post_percent():
