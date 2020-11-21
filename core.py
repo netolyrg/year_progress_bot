@@ -219,19 +219,16 @@ def generate_ny_countdown_text(orig_days: int) -> str:
     day_map = {
         (1, ): 'день',
         (2, 3, 4): 'дня',
-        (i for i in range(5, 21)): 'дней'
+        (5, 6, 7, 8, 9, 0): 'дней',
     }
 
-    if orig_days > 20:
-        days = orig_days % 10
+    if orig_days % 100 in (11, 12, 13, 14):
+        word = 'дней'
     else:
-        days = orig_days
-
-    word = 'дней'
-    for rng, value in day_map.items():
-        if days in rng:
-            word = value
-            break
+        for rng, value in day_map.items():
+            if orig_days % 10 in rng:
+                word = value
+                break
 
     return f'Всего {orig_days} {word} до Нового года :)'
 

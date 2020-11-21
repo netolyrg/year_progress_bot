@@ -132,16 +132,8 @@ def test_ny_text_plural_5():
 
     assert actual == expected
 
-
-def test_ny_text_plural_21():
-    expected = 'Всего 21 день до Нового года :)'
-    actual = generate_ny_countdown_text(21)
-
-    assert actual == expected
-
-
-def test_ny_text_plural_15():
-    expected = 'Всего 15 дней до Нового года :)'
-    actual = generate_ny_countdown_text(15)
+def test_ny_text_plural_111():
+    expected = 'Всего 111 дней до Нового года :)'
+    actual = generate_ny_countdown_text(111)
 
     assert actual == expected
