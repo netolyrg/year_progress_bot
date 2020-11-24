@@ -16,6 +16,7 @@ from core import (
     get_days_before_new_year,
     generate_ny_countdown_text
 )
+from phrases import NY_PHRASES
 
 
 @freeze_time('2019-07-02')
@@ -132,8 +133,25 @@ def test_ny_text_plural_5():
 
     assert actual == expected
 
+
 def test_ny_text_plural_111():
     expected = 'Всего 111 дней до Нового года :)'
     actual = generate_ny_countdown_text(111)
 
     assert actual == expected
+
+
+def test_all_phrases_for_ny():
+    result = []
+
+    for phrase in NY_PHRASES:
+        post_text = generate_ny_countdown_text(33, phrase=phrase)
+        result.append(post_text)
+
+    assert all(
+        line.count('{') + line.count('}') == 0 for line in result
+    )
+
+    assert all(
+        len(line) != 0 for line in result
+    )

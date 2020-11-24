@@ -6,9 +6,11 @@ Python just for fun
 
 import os
 from datetime import datetime as dt, timedelta
+from random import choice
 
 import vk_api
 from PIL import Image, ImageDraw, ImageFont
+from phrases import NY_PHRASES
 
 VK_LOGIN = os.environ.get('VK_LOGIN')
 VK_PASS = os.environ.get('VK_PASS')
@@ -215,9 +217,9 @@ def get_days_before_new_year() -> int:
     return 366 - get_day_number() + int(is_leap_year(year))
 
 
-def generate_ny_countdown_text(orig_days: int) -> str:
+def generate_ny_countdown_text(orig_days: int, phrase: str = 'Всего {orig_days} {word} до Нового года :)') -> str:
     day_map = {
-        (1, ): 'день',
+        (1,): 'день',
         (2, 3, 4): 'дня',
         (5, 6, 7, 8, 9, 0): 'дней',
     }
@@ -230,7 +232,7 @@ def generate_ny_countdown_text(orig_days: int) -> str:
                 word = value
                 break
 
-    return f'Всего {orig_days} {word} до Нового года :)'
+    return phrase.format(orig_days=orig_days, word=word)
 
 
 def post_new_year_countdown():
@@ -243,7 +245,8 @@ def post_new_year_countdown():
     vk = vk_session.get_api()
 
     days_before_new_year = get_days_before_new_year()
-    post_text = generate_ny_countdown_text(days_before_new_year)
+    phrase = choice(NY_PHRASES)
+    post_text = generate_ny_countdown_text(days_before_new_year, phrase=phrase)
 
     post_response = vk.wall.post(owner_id=f'-{GROUP_ID}', message=post_text)
     print(post_response)
