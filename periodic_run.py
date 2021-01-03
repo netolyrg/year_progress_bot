@@ -32,7 +32,7 @@ def timed_job():
 
 @scheduler.scheduled_job('cron', hour=11)  # 11:00 UTC, 14:00 Moscow
 def timed_job():
-    new_year_feature_enabled = os.environ.get('NEW_YEAR_FEATURE_ENABLED', False)
+    new_year_feature_enabled = bool(os.environ.get('NEW_YEAR_FEATURE_ENABLED', False))
     if new_year_feature_enabled:
         post_new_year_countdown()
 
