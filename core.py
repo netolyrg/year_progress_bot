@@ -174,7 +174,7 @@ def create_yp_logo() -> str:
     width, height = image_size
 
     # percent
-    percent_width, percent_height = 468, 293
+    percent_width, percent_height = font_percent.getsize(text_percent)[0], 293
     x, y = (width - percent_width) // 2, (height - percent_height - 25) // 2
     draw.text((x, y), text_percent, fill=(0, 0, 0), font=font_percent)
 
@@ -264,6 +264,3 @@ if __name__ == '__main__':
         load_new_group_cover(logo_file_name)
     else:
         post_day_count()
-
-    if NEW_YEAR_FEATURE_ENABLED:
-        post_new_year_countdown()
