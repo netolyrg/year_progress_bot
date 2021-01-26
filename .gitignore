@@ -6,3 +6,4 @@ __pycache__/
 *.png
 
 vk_config.v2.json
+.python-version

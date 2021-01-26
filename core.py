@@ -122,7 +122,7 @@ def prepare_message_number(day: int) -> str:
     return template
 
 
-def post_day_count() -> None:
+def post_day_count(image_file_name=None) -> None:
     assert VK_LOGIN
     assert VK_PASS
 
@@ -134,8 +134,22 @@ def post_day_count() -> None:
     day_number = get_day_number()
     message = prepare_message_number(day_number)
 
+    if image_file_name:
+        upload = vk_api.VkUpload(vk_session)
+        photo = upload.photo_wall(
+            image_file_name,
+            group_id=GROUP_ID,
+        )[0]
+
+        owner_id, media_id = photo.get('owner_id'), photo.get('id')
+        photo_attachment = f'photo{owner_id}_{media_id}'
+
+        data_to_post = dict(owner_id=f'-{GROUP_ID}', message=message, attachments=photo_attachment)
+    else:
+        data_to_post = dict(owner_id=f'-{GROUP_ID}', message=message)
+
     # TODO add retry
-    post_response = vk.wall.post(owner_id=f'-{GROUP_ID}', message=message)
+    post_response = vk.wall.post(**data_to_post)
     print(post_response)
 
 
@@ -181,6 +195,39 @@ def create_yp_logo() -> str:
     # title
     title_width, title_height = 254, 49
     x, y = (width - title_width - 2) // 2, (height - title_height + 279) // 2
+    draw.text((x, y), text_title, fill=(177, 177, 177), font=font_title)
+
+    img.save(file_name)
+
+    return file_name
+
+
+# todo need tests
+def create_yp_number_image() -> str:
+    file_name = 'yp_number.png'
+    title_size = 42
+    percent_size = 56
+    image_size = (700, 700)
+
+    day_number = get_day_number()
+    text_number = prepare_message_number(day_number).replace('.', '')
+    text_title = 'Year Progress'
+
+    img = Image.new(mode='RGB', color=(255, 255, 255), size=image_size)
+    draw = ImageDraw.Draw(img)
+    font_percent = ImageFont.truetype('fonts/Roboto-Medium.ttf', size=percent_size)
+    font_title = ImageFont.truetype('fonts/Roboto-Regular.ttf', size=title_size)
+
+    width, height = image_size
+
+    # percent
+    percent_width, percent_height = font_percent.getsize(text_number)[0], font_percent.getsize(text_number)[1]
+    x, y = (width - percent_width) // 2, (height - percent_height - 25) // 2
+    draw.text((x, y), text_number, fill=(0, 0, 0), font=font_percent)
+
+    # title
+    title_width, title_height = 254, 49
+    x, y = (width - title_width - 2) // 2, (height - title_height + 120) // 2
     draw.text((x, y), text_title, fill=(177, 177, 177), font=font_title)
 
     img.save(file_name)
@@ -263,4 +310,5 @@ if __name__ == '__main__':
         logo_file_name = create_yp_logo()
         load_new_group_cover(logo_file_name)
     else:
-        post_day_count()
+        image_name = create_yp_number_image()
+        post_day_count(image_file_name=image_name)
